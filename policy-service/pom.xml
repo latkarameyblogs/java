@@ -62,6 +62,12 @@
             <version>2.2.0</version>
         </dependency>
 
+        <!-- Kafka messaging -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
 
         <!-- Testing -->
         <dependency>
