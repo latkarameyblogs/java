@@ -57,7 +57,13 @@ public class PolicyEventListener {
         Policy policy = repository.findById(event.getPolicyId())
                 .orElseThrow(() -> new RuntimeException("Policy not found"));
 
+        if (policy.getStatus() == PolicyStatus.ACTIVE) {
+            log.info("Policy already ACTIVE. Ignoring duplicate event.");
+            return;
+        }
+
         if (event.isSuccess()) {
+
             policy.setStatus(PolicyStatus.ACTIVE);
         } else {
             policy.setStatus(PolicyStatus.CANCELLED);
