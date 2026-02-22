@@ -14,7 +14,13 @@ public class PolicyCreatedListener {
         this.producer = producer;
     }
 
-    @KafkaListener(topics = "policy-created", groupId = "underwriting-group")
+    @KafkaListener(
+            topics = "policy-created",
+            groupId = "underwriting-group",
+            properties = {
+                    "spring.json.value.default.type=com.insurance.platform.underwriting.event.PolicyCreatedEvent"
+            }
+    )
     public void handlePolicyCreated(PolicyCreatedEvent event) {
 
         boolean approved;
