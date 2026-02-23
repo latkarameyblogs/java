@@ -7,6 +7,8 @@
     <file url="file://$PROJECT_DIR$/payment-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/policy-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/policy-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/saga-orchestrator-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/saga-orchestrator-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/underwriting-service/src/main/java" charset="UTF-8" />

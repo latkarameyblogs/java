@@ -14,6 +14,7 @@
         <module>policy-service</module>
         <module>underwriting-service</module>
         <module>payment-service</module>
+        <module>saga-orchestrator-service</module>
     </modules>
 
     <properties>
