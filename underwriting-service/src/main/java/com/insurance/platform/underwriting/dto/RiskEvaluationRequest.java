@@ -11,6 +11,11 @@ public class RiskEvaluationRequest {
     @NotNull
     private String policyType;
 
+    public RiskEvaluationRequest(String policyType, BigDecimal premiumAmount) {
+        this.policyType = policyType;
+        this.premiumAmount = premiumAmount;
+    }
+
     public BigDecimal getPremiumAmount() {
         return premiumAmount;
     }

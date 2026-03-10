@@ -1,17 +1,17 @@
 package com.insurance.platform.policy.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.insurance.platform.policy.client.CustomerClient;
-import com.insurance.platform.policy.client.UnderwritingClient;
-import com.insurance.platform.policy.client.PaymentClient;
-import com.insurance.platform.policy.client.dto.RiskEvaluationRequest;
-import com.insurance.platform.policy.client.dto.RiskEvaluationResponse;
-import com.insurance.platform.policy.client.dto.PaymentResponse;
 import com.insurance.platform.policy.domain.Policy;
 import com.insurance.platform.policy.domain.PolicyStatus;
+import com.insurance.platform.policy.event.PolicyCreatedEvent;
+import com.insurance.platform.policy.messaging.PolicyEventProducer;
+import com.insurance.platform.policy.outbox.OutboxEvent;
+import com.insurance.platform.policy.outbox.OutboxEventRepository;
 import com.insurance.platform.policy.repository.PolicyRepository;
 import org.springframework.stereotype.Service;
-import com.insurance.platform.policy.messaging.PolicyEventProducer;
-import com.insurance.platform.policy.event.PolicyCreatedEvent;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -24,17 +24,17 @@ public class PolicyService {
 //    private final PaymentClient paymentClient;
     private final PolicyEventProducer eventProducer;
 
+    private final OutboxEventRepository outboxRepository;
+
     public PolicyService(
             PolicyRepository repository,
             CustomerClient customerClient,
-//            UnderwritingClient underwritingClient,
-//            PaymentClient paymentClient,
-            PolicyEventProducer eventProducer) {
+            PolicyEventProducer eventProducer,
+            OutboxEventRepository outboxRepository) {
         this.repository = repository;
         this.customerClient = customerClient;
-//        this.underwritingClient = underwritingClient;
-//        this.paymentClient = paymentClient;
         this.eventProducer = eventProducer;
+        this.outboxRepository = outboxRepository;
     }
 
     /**
@@ -98,9 +98,10 @@ public class PolicyService {
 
     //Choreography SAGA
 
-    public Policy createPolicy(Policy policy) {
 
-        // Validate customer (still synchronous is fine)
+    @Transactional
+    public Policy createPolicy (Policy policy,String sagaId) {
+
         if (!customerClient.customerExists(policy.getCustomerId())) {
             throw new RuntimeException("Customer does not exist");
         }
@@ -110,19 +111,54 @@ public class PolicyService {
 
         Policy savedPolicy = repository.save(policy);
 
-        // Publish event
         PolicyCreatedEvent event = new PolicyCreatedEvent(
+                sagaId,
                 savedPolicy.getId(),
                 savedPolicy.getCustomerId(),
                 savedPolicy.getPolicyType(),
                 savedPolicy.getPremiumAmount()
         );
 
-        eventProducer.publishPolicyCreated(event);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String payload;
+
+        try {
+            payload = mapper.writeValueAsString(event);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        OutboxEvent outboxEvent = new OutboxEvent(
+                "POLICY",
+                savedPolicy.getId().toString(),
+                "POLICY_CREATED",
+                payload
+        );
+
+        outboxRepository.save(outboxEvent);
+
+        // REMOVE THIS
+        // eventProducer.publishPolicyCreated(event);
 
         return savedPolicy;
     }
 
+
+    @Transactional
+    public void activatePolicy(Long policyId) {
+
+        Policy policy = repository
+                .findById(policyId)
+                .orElseThrow();
+
+        policy.setStatus(PolicyStatus.ACTIVE);
+
+        repository.save(policy);
+
+        System.out.println("Policy ACTIVATED for policyId: " + policyId);
+    }
 
 
     /**

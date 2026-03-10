@@ -1,18 +1,17 @@
 package com.insurance.platform.payment.messaging.listener;
 
-import com.insurance.platform.payment.event.PaymentCompletedEvent;
 import com.insurance.platform.payment.messaging.command.ProcessPaymentCommand;
+import com.insurance.platform.payment.service.PaymentService;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PaymentCommandListener {
 
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final PaymentService paymentService;
 
-    public PaymentCommandListener(KafkaTemplate<String, Object> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
+    public PaymentCommandListener(PaymentService paymentService) {
+        this.paymentService = paymentService;
     }
 
     @KafkaListener(
@@ -24,16 +23,14 @@ public class PaymentCommandListener {
     )
     public void handleProcessPayment(ProcessPaymentCommand command) {
 
-        System.out.println("Payment Service received ProcessPaymentCommand for policyId: "
-                + command.getPolicyId());
+        System.out.println(
+                "Payment Service received ProcessPaymentCommand for policyId: "
+                        + command.getPolicyId()
+        );
 
-        // simulate success
-        PaymentCompletedEvent event =
-                new PaymentCompletedEvent(command.getPolicyId(), true);
-
-        kafkaTemplate.send("payment-completed", event);
-
-        System.out.println("PaymentCompletedEvent published for policyId: "
-                + command.getPolicyId());
+        paymentService.processPayment(
+                command.getPolicyId(),
+                command.getSagaId()
+        );
     }
 }

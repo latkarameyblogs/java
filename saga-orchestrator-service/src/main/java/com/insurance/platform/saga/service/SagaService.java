@@ -2,7 +2,7 @@ package com.insurance.platform.saga.service;
 
 import com.insurance.platform.saga.domain.SagaInstance;
 import com.insurance.platform.saga.domain.SagaStep;
-import com.insurance.platform.saga.messaging.command.EvaluateRiskCommand;
+import com.insurance.platform.saga.messaging.command.CreatePolicyCommand;
 import com.insurance.platform.saga.messaging.producer.SagaCommandProducer;
 import com.insurance.platform.saga.repository.SagaRepository;
 import org.springframework.stereotype.Service;
@@ -20,20 +20,36 @@ public class SagaService {
         this.commandProducer = commandProducer;
     }
 
-    public SagaInstance startSaga(Long policyId) {
+
+    public SagaInstance startSaga(CreatePolicyCommand command) {
 
         SagaInstance saga = new SagaInstance();
-        saga.setPolicyId(policyId);
-        saga.setCurrentStep(SagaStep.WAITING_FOR_RISK);
+
+        saga.setCurrentStep(SagaStep.POLICY_CREATION_STARTED);
 
         SagaInstance savedSaga = sagaRepository.save(saga);
 
-        // publish command
-        EvaluateRiskCommand command =
-                new EvaluateRiskCommand(policyId);
-
-        commandProducer.sendEvaluateRiskCommand(command);
+        command.setSagaId(String.valueOf(savedSaga.getId()));
+        commandProducer.sendCreatePolicyCommand(command);
 
         return savedSaga;
     }
+
+
+//    public SagaInstance startSaga(Long policyId) {
+//
+//        SagaInstance saga = new SagaInstance();
+//        saga.setPolicyId(policyId);
+//        saga.setCurrentStep(SagaStep.WAITING_FOR_RISK);
+//
+//        SagaInstance savedSaga = sagaRepository.save(saga);
+//
+//        // publish command
+//        EvaluateRiskCommand command =
+//                new EvaluateRiskCommand(policyId);
+//
+//        commandProducer.sendEvaluateRiskCommand(command);
+//
+//        return savedSaga;
+//    }
 }

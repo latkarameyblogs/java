@@ -1,23 +1,59 @@
 package com.insurance.platform.payment.service;
 
-import com.insurance.platform.payment.dto.PaymentRequest;
-import com.insurance.platform.payment.dto.PaymentResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.insurance.platform.payment.event.PaymentCompletedEvent;
+import com.insurance.platform.payment.outbox.OutboxEvent;
+import com.insurance.platform.payment.outbox.OutboxEventRepository;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PaymentService {
 
-    public boolean processApprovedPolicy(Long policyId) {
-        // Simulated payment success
-        return true;
+    private final OutboxEventRepository outboxRepository;
+    private final ObjectMapper objectMapper;
+
+    public PaymentService(OutboxEventRepository outboxRepository,
+                          ObjectMapper objectMapper) {
+        this.outboxRepository = outboxRepository;
+        this.objectMapper = objectMapper;
     }
 
-    public PaymentResponse processPayment(PaymentRequest request) {
-        if (request.getAmount().doubleValue() > 50000) {
-            return new PaymentResponse(false, "Payment amount exceeds limit");
+    @Transactional
+    public Boolean  processPayment(Long policyId, String sagaId) {
+
+        System.out.println(
+                "Processing payment for policyId: " + policyId
+        );
+
+        // Simulated payment logic
+        boolean success = true;
+
+        PaymentCompletedEvent event =
+                new PaymentCompletedEvent(
+                        sagaId,
+                        policyId,
+                        success
+                );
+
+        try {
+
+            String payload =
+                    objectMapper.writeValueAsString(event);
+
+            OutboxEvent outboxEvent =
+                    new OutboxEvent(
+                            "PAYMENT",
+                            policyId.toString(),
+                            "PAYMENT_COMPLETED",
+                            payload
+                    );
+
+            outboxRepository.save(outboxEvent);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return new PaymentResponse(true, "Payment processed successfully");
+        return true;
     }
 }

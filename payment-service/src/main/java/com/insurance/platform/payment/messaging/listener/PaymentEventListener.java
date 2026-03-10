@@ -1,10 +1,8 @@
-package com.insurance.platform.payment.messaging;
+package com.insurance.platform.payment.messaging.listener;
 
 import com.insurance.platform.payment.event.PaymentCompletedEvent;
 import com.insurance.platform.payment.event.RiskEvaluatedEvent;
 import com.insurance.platform.payment.service.PaymentService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -42,11 +40,11 @@ public class PaymentEventListener {
             return;
         }
 
-        boolean paymentSuccess =
-                paymentService.processApprovedPolicy(event.getPolicyId());
+
+       Boolean paymentSuccess = paymentService.processPayment(event.getPolicyId(),event.getSagaID());
 
         PaymentCompletedEvent completedEvent =
-                new PaymentCompletedEvent(event.getPolicyId(), paymentSuccess);
+                new PaymentCompletedEvent(event.getSagaID(),event.getPolicyId(), paymentSuccess);
 
         kafkaTemplate.send("payment-completed", completedEvent);
 

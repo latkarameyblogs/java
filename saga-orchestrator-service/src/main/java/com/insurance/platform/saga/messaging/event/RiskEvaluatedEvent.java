@@ -1,35 +1,52 @@
 package com.insurance.platform.saga.messaging.event;
 
+import java.math.BigDecimal;
+
 public class RiskEvaluatedEvent {
 
     private Long policyId;
     private boolean approved;
     private String reason;
+    private String sagaID;
 
-    public RiskEvaluatedEvent() {
+
+
+    private String policyType;
+
+    private BigDecimal premiumAmount;
+
+    public RiskEvaluatedEvent() {}
+
+    public RiskEvaluatedEvent(String sagaID,Long policyId, boolean approved, String reason, String policyType, BigDecimal premiumAmount) {
+        this.sagaID = sagaID;
+        this.policyId = policyId;
+        this.approved = approved;
+        this.reason = reason;
+        this.policyType = policyType;
+        this.premiumAmount = premiumAmount;
     }
 
     public Long getPolicyId() {
         return policyId;
     }
 
-    public void setPolicyId(Long policyId) {
-        this.policyId = policyId;
-    }
-
     public boolean isApproved() {
         return approved;
-    }
-
-    public void setApproved(boolean approved) {
-        this.approved = approved;
     }
 
     public String getReason() {
         return reason;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
+    public String getSagaID() {
+        return sagaID;
+    }
+
+    public String getPolicyType() {
+        return policyType;
+    }
+
+    public BigDecimal getPremiumAmount() {
+        return premiumAmount;
     }
 }

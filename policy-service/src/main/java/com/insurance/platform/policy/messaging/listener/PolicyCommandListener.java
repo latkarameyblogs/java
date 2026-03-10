@@ -1,20 +1,36 @@
 package com.insurance.platform.policy.messaging.listener;
 
 import com.insurance.platform.policy.domain.Policy;
-import com.insurance.platform.policy.domain.PolicyStatus;
 import com.insurance.platform.policy.messaging.command.ActivatePolicyCommand;
-import com.insurance.platform.policy.repository.PolicyRepository;
+import com.insurance.platform.policy.messaging.command.CreatePolicyCommand;
+import com.insurance.platform.policy.service.PolicyService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PolicyCommandListener {
 
-    private final PolicyRepository repository;
-
-    public PolicyCommandListener(PolicyRepository repository) {
-        this.repository = repository;
+    public PolicyCommandListener(PolicyService policyService) {
+        this.policyService = policyService;
     }
+
+    private final PolicyService policyService;
+
+
+    @KafkaListener(topics = "create-policy-command", groupId = "policy-service",  properties = {
+            "spring.json.value.default.type=com.insurance.platform.policy.messaging.command.CreatePolicyCommand"
+    })
+    public void handleCreatePolicy(CreatePolicyCommand command) {
+
+        Policy policy = new Policy();
+
+        policy.setCustomerId(command.getCustomerId());
+        policy.setPolicyType(command.getPolicyType());
+        policy.setPremiumAmount(command.getPremiumAmount());
+
+        policyService.createPolicy(policy,command.getSagaId());
+    }
+
 
 
     @KafkaListener(
@@ -31,19 +47,6 @@ public class PolicyCommandListener {
                         + command.getPolicyId()
         );
 
-
-        Policy policy =
-                repository.findById(command.getPolicyId())
-                        .orElseThrow();
-
-        policy.setStatus(PolicyStatus.ACTIVE);
-
-        repository.save(policy);
-
-
-        System.out.println(
-                "Policy ACTIVATED for policyId: "
-                        + command.getPolicyId()
-        );
+        policyService.activatePolicy(command.getPolicyId());
     }
 }

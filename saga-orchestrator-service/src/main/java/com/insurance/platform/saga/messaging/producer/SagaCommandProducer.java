@@ -1,6 +1,7 @@
 package com.insurance.platform.saga.messaging.producer;
 
 import com.insurance.platform.saga.messaging.command.ActivatePolicyCommand;
+import com.insurance.platform.saga.messaging.command.CreatePolicyCommand;
 import com.insurance.platform.saga.messaging.command.EvaluateRiskCommand;
 import com.insurance.platform.saga.messaging.command.ProcessPaymentCommand;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -13,6 +14,16 @@ public class SagaCommandProducer {
 
     public SagaCommandProducer(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
+    }
+
+
+    public void sendCreatePolicyCommand(CreatePolicyCommand command) {
+        kafkaTemplate.send("create-policy-command", command);
+
+        System.out.println(
+                "sendCreatePolicyCommand to create policy: "
+                        + command.getCustomerId()
+        );
     }
 
 

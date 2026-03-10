@@ -12,7 +12,7 @@ public class SagaInstance {
     @Id
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long policyId;
 
     @Enumerated(EnumType.STRING)

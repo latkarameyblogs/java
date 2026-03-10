@@ -2,16 +2,19 @@ package com.insurance.platform.saga.messaging.listener;
 
 import com.insurance.platform.saga.domain.SagaInstance;
 import com.insurance.platform.saga.domain.SagaStep;
+import com.insurance.platform.saga.messaging.command.ActivatePolicyCommand;
+import com.insurance.platform.saga.messaging.command.EvaluateRiskCommand;
 import com.insurance.platform.saga.messaging.command.ProcessPaymentCommand;
+import com.insurance.platform.saga.messaging.event.PaymentCompletedEvent;
+import com.insurance.platform.saga.messaging.event.PolicyCreatedEvent;
 import com.insurance.platform.saga.messaging.event.RiskEvaluatedEvent;
 import com.insurance.platform.saga.messaging.producer.SagaCommandProducer;
 import com.insurance.platform.saga.repository.SagaRepository;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import  com.insurance.platform.saga.messaging.event.PaymentCompletedEvent;
-import com.insurance.platform.saga.messaging.command.ActivatePolicyCommand;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class SagaEventListener {
@@ -24,6 +27,58 @@ public class SagaEventListener {
         this.sagaRepository = sagaRepository;
         this.commandProducer  = commandProducer;
     }
+
+    @KafkaListener(
+            topics = "policy-created",
+            groupId = "saga-group",
+            properties = {
+                    "spring.json.value.default.type=com.insurance.platform.saga.messaging.event.PolicyCreatedEvent"
+            }
+    )
+    public void handlePolicyCreated(PolicyCreatedEvent event) {
+
+        System.out.println(
+                "Orchestrator received PolicyCreatedEvent for policyId: "
+                        + event.toString()
+        );
+
+       Optional<SagaInstance> optionalSaga =
+               sagaRepository.findById(UUID.fromString(event.getSagaId()));
+
+
+
+        if (optionalSaga.isEmpty()) {
+
+            System.out.println(
+                    "Saga not found for policyId: "
+                            + event.getPolicyId()
+            );
+
+            return;
+        }
+
+        SagaInstance saga = optionalSaga.get();
+
+        saga.setPolicyId(event.getPolicyId());
+        saga.setCurrentStep(SagaStep.WAITING_FOR_RISK);
+
+        EvaluateRiskCommand command =
+                new EvaluateRiskCommand(event.getSagaId(), event.getPolicyId(), event.getPolicyType(), event.getPremiumAmount());
+
+        commandProducer.sendEvaluateRiskCommand(command);
+
+        sagaRepository.save(saga);
+
+        System.out.println(
+                "Saga progressed to risk evaluation for policyId: "
+                        + event.getPolicyId()
+        );
+    }
+
+
+
+
+
 
     @KafkaListener(
             topics = "risk-evaluated",
@@ -55,7 +110,7 @@ public class SagaEventListener {
             saga.setCurrentStep(SagaStep.WAITING_FOR_PAYMENT);
 
             ProcessPaymentCommand command =
-                    new ProcessPaymentCommand(event.getPolicyId());
+                    new ProcessPaymentCommand(event.getSagaID(), event.getPolicyId(), event.getPolicyType(), event.getPremiumAmount());
 
             commandProducer.sendProcessPaymentCommand(command);
 

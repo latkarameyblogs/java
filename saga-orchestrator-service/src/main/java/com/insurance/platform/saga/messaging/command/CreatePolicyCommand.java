@@ -1,45 +1,44 @@
-package com.insurance.platform.underwriting.messaging.command;
+package com.insurance.platform.saga.messaging.command;
+
 
 import java.math.BigDecimal;
 
-public class EvaluateRiskCommand {
+public class CreatePolicyCommand {
 
-    private Long policyId;
-
+    private Long customerId;
     private String policyType;
-
     private BigDecimal premiumAmount;
-
     private String sagaId;
 
-    public EvaluateRiskCommand() {
-    }
+    public CreatePolicyCommand() {}
 
-    public EvaluateRiskCommand(String sagaId, Long policyId, String policyType, BigDecimal premiumAmount) {
+    public CreatePolicyCommand(String sagaId,Long customerId, String policyType, BigDecimal premiumAmount) {
         this.sagaId = sagaId;
-        this.policyId = policyId;
+        this.customerId = customerId;
         this.policyType = policyType;
         this.premiumAmount = premiumAmount;
     }
 
-    public Long getPolicyId() {
-        return policyId;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setPolicyId(Long policyId) {
-        this.policyId = policyId;
-    }
+
 
     public String getPolicyType() {
         return policyType;
     }
 
-    public void setPolicyType(String policyType) {
-        this.policyType = policyType;
-    }
-
     public BigDecimal getPremiumAmount() {
         return premiumAmount;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public void setPolicyType(String policyType) {
+        this.policyType = policyType;
     }
 
     public void setPremiumAmount(BigDecimal premiumAmount) {
@@ -52,5 +51,6 @@ public class EvaluateRiskCommand {
 
     public void setSagaId(String sagaId) {
         this.sagaId = sagaId;
+
     }
 }

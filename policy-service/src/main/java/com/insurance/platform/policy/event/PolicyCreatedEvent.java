@@ -8,11 +8,13 @@ public class PolicyCreatedEvent {
     private Long customerId;
     private String policyType;
     private BigDecimal premiumAmount;
+    private String sagaId;
 
     public PolicyCreatedEvent() {
     }
 
-    public PolicyCreatedEvent(Long policyId, Long customerId, String policyType, BigDecimal premiumAmount) {
+    public PolicyCreatedEvent(String sagaId,Long policyId, Long customerId, String policyType, BigDecimal premiumAmount) {
+        this.sagaId = sagaId;
         this.policyId = policyId;
         this.customerId = customerId;
         this.policyType = policyType;
@@ -34,4 +36,10 @@ public class PolicyCreatedEvent {
     public BigDecimal getPremiumAmount() {
         return premiumAmount;
     }
+
+    public String getSagaId() {
+        return sagaId;
+    }
+
+
 }

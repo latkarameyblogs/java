@@ -1,12 +1,13 @@
 server:
-  port: 8084
+  port: 8082
+  address: 0.0.0.0
 
 spring:
   application:
-    name: payment-service
+    name: policy-service
 
   datasource:
-    url: jdbc:h2:mem:underwriterdb
+    url: jdbc:h2:mem:policydb
     driverClassName: org.h2.Driver
     username: sa
     password:
@@ -19,11 +20,12 @@ spring:
   h2:
     console:
       enabled: true
-  kafka:
-    bootstrap-servers: localhost:9092
 
+
+  kafka:
+    bootstrap-servers: 3.110.47.25:9092
     consumer:
-      group-id: payment-service-group-v2
+      group-id: policy-group-v2
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
@@ -31,14 +33,36 @@ spring:
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
         spring.json.trusted.packages: "*"
         spring.json.use.type.headers: false
-#        spring.json.value.default.type: com.insurance.platform.payment.event.RiskEvaluatedEvent
 
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: "*"
+
+  endpoint:
+    health:
+      show-details: always
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      customerService:
+        registerHealthIndicator: true
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 3
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+
+      underwritingService:
+        registerHealthIndicator: true
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 3
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+
+logging:
+  level:
+    root: INFO
