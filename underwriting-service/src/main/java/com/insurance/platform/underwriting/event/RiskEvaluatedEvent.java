@@ -15,6 +15,10 @@ public class RiskEvaluatedEvent {
 
     private BigDecimal premiumAmount;
 
+    private String eventId;
+
+
+
     public RiskEvaluatedEvent() {}
 
     public RiskEvaluatedEvent(String sagaID,Long policyId, boolean approved, String reason, String policyType, BigDecimal premiumAmount) {
@@ -48,5 +52,13 @@ public class RiskEvaluatedEvent {
 
     public BigDecimal getPremiumAmount() {
         return premiumAmount;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
     }
 }

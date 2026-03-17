@@ -10,20 +10,26 @@ public class PolicyCreatedEvent {
     private BigDecimal premiumAmount;
     private String sagaId;
 
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
+    private String eventId;
+
     public PolicyCreatedEvent() {
     }
 
-
-
-    public PolicyCreatedEvent(String sagaId, Long policyId, Long customerId, String policyType, BigDecimal premiumAmount) {
+    public PolicyCreatedEvent(String sagaId,Long policyId, Long customerId, String policyType, BigDecimal premiumAmount) {
         this.sagaId = sagaId;
         this.policyId = policyId;
         this.customerId = customerId;
         this.policyType = policyType;
         this.premiumAmount = premiumAmount;
     }
-
-
 
     public Long getPolicyId() {
         return policyId;
@@ -45,18 +51,6 @@ public class PolicyCreatedEvent {
         return sagaId;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "PolicyCreatedEvent{" +
-                "policyId=" + policyId +
-                ", customerId=" + customerId +
-                ", policyType='" + policyType + '\'' +
-                ", premiumAmount=" + premiumAmount +
-                ", sagaId='" + sagaId + '\'' +
-                '}';
-    }
 
 
 

@@ -2,12 +2,23 @@ package com.insurance.platform.saga.messaging.event;
 
 public class PaymentCompletedEvent {
 
+    private String sagaID;
     private Long policyId;
     private boolean success;
 
+    private String eventId;
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
     public PaymentCompletedEvent() {}
 
-    public PaymentCompletedEvent(Long policyId, boolean success) {
+    public PaymentCompletedEvent(String sagaID,Long policyId, boolean success) {
         this.policyId = policyId;
         this.success = success;
     }

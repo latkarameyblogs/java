@@ -7,6 +7,8 @@ import com.insurance.platform.payment.outbox.OutboxEventRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 public class PaymentService {
 
@@ -35,6 +37,7 @@ public class PaymentService {
                         policyId,
                         success
                 );
+        event.setEventId(UUID.randomUUID().toString());
 
         try {
 
@@ -48,6 +51,7 @@ public class PaymentService {
                             "PAYMENT_COMPLETED",
                             payload
                     );
+
 
             outboxRepository.save(outboxEvent);
 

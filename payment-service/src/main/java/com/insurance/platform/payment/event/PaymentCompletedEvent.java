@@ -6,6 +6,16 @@ public class PaymentCompletedEvent {
     private Long policyId;
     private boolean success;
 
+    private String eventId;
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
     public PaymentCompletedEvent() {}
 
     public PaymentCompletedEvent(String sagaID,Long policyId, boolean success) {

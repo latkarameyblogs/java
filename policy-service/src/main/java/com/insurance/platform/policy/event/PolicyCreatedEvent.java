@@ -10,6 +10,16 @@ public class PolicyCreatedEvent {
     private BigDecimal premiumAmount;
     private String sagaId;
 
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
+    private String eventId;
+
     public PolicyCreatedEvent() {
     }
 
@@ -40,6 +50,8 @@ public class PolicyCreatedEvent {
     public String getSagaId() {
         return sagaId;
     }
+
+
 
 
 }

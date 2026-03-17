@@ -7,8 +7,10 @@ import com.insurance.platform.saga.messaging.command.EvaluateRiskCommand;
 import com.insurance.platform.saga.messaging.command.ProcessPaymentCommand;
 import com.insurance.platform.saga.messaging.event.PaymentCompletedEvent;
 import com.insurance.platform.saga.messaging.event.PolicyCreatedEvent;
+import com.insurance.platform.saga.messaging.event.ProcessedEvent;
 import com.insurance.platform.saga.messaging.event.RiskEvaluatedEvent;
 import com.insurance.platform.saga.messaging.producer.SagaCommandProducer;
+import com.insurance.platform.saga.repository.ProcessedEventRepository;
 import com.insurance.platform.saga.repository.SagaRepository;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -21,11 +23,14 @@ public class SagaEventListener {
 
     private final SagaRepository sagaRepository;
 
+    private final ProcessedEventRepository processedEventRepository;
+
     private final SagaCommandProducer commandProducer;
 
-    public SagaEventListener(SagaRepository sagaRepository,SagaCommandProducer commandProducer) {
+    public SagaEventListener(SagaRepository sagaRepository,SagaCommandProducer commandProducer, ProcessedEventRepository processedEventRepository) {
         this.sagaRepository = sagaRepository;
         this.commandProducer  = commandProducer;
+        this.processedEventRepository = processedEventRepository;
     }
 
     @KafkaListener(
@@ -41,6 +46,13 @@ public class SagaEventListener {
                 "Orchestrator received PolicyCreatedEvent for policyId: "
                         + event.toString()
         );
+
+        if (processedEventRepository.existsById(event.getEventId())) {
+            System.out.println("Duplicate PolicyCreatedEvent ignored: " + event.getEventId());
+            return;
+        }
+
+
 
        Optional<SagaInstance> optionalSaga =
                sagaRepository.findById(UUID.fromString(event.getSagaId()));
@@ -68,6 +80,7 @@ public class SagaEventListener {
         commandProducer.sendEvaluateRiskCommand(command);
 
         sagaRepository.save(saga);
+        processedEventRepository.save(new ProcessedEvent(event.getEventId()));
 
         System.out.println(
                 "Saga progressed to risk evaluation for policyId: "
@@ -91,6 +104,15 @@ public class SagaEventListener {
 
         System.out.println("Orchestrator received RiskEvaluatedEvent for policyId: "
                 + event.getPolicyId());
+
+        if (processedEventRepository.existsById(event.getEventId())) {
+            System.out.println("Duplicate RiskEvaluatedEvent ignored: " + event.getEventId());
+            return;
+        }
+
+//        if (true) {
+//            throw new RuntimeException("Simulated failure for retry testing");
+//        }
 
         Optional<SagaInstance> optionalSaga =
                 sagaRepository.findByPolicyId(event.getPolicyId());
@@ -121,6 +143,8 @@ public class SagaEventListener {
 
         sagaRepository.save(saga);
 
+        processedEventRepository.save(new ProcessedEvent(event.getEventId()));
+
         System.out.println("Saga updated for policyId: "
                 + event.getPolicyId());
     }
@@ -138,6 +162,11 @@ public class SagaEventListener {
                 "Orchestrator received PaymentCompletedEvent for policyId: "
                         + event.getPolicyId()
         );
+
+        if (processedEventRepository.existsById(event.getEventId())) {
+            System.out.println("Duplicate PaymentCompletedEvent ignored: " + event.getEventId());
+            return;
+        }
 
         SagaInstance saga =
                 sagaRepository.findByPolicyId(event.getPolicyId())
@@ -178,5 +207,6 @@ public class SagaEventListener {
                 "Saga completed for policyId: "
                         + event.getPolicyId()
         );
+        processedEventRepository.save(new ProcessedEvent(event.getEventId()));
     }
 }

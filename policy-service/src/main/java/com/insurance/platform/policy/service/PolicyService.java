@@ -118,7 +118,7 @@ public class PolicyService {
                 savedPolicy.getPolicyType(),
                 savedPolicy.getPremiumAmount()
         );
-
+        event.setEventId(UUID.randomUUID().toString());
 
         ObjectMapper mapper = new ObjectMapper();
         String payload;
@@ -139,8 +139,7 @@ public class PolicyService {
 
         outboxRepository.save(outboxEvent);
 
-        // REMOVE THIS
-        // eventProducer.publishPolicyCreated(event);
+
 
         return savedPolicy;
     }

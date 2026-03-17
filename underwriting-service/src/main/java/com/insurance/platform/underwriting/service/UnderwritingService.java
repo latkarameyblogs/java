@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Service
 public class UnderwritingService {
@@ -69,7 +70,7 @@ public class UnderwritingService {
                         policyType,
                         premiumAmount
                 );
-
+        event.setEventId(UUID.randomUUID().toString());
         try {
 
             String payload =
