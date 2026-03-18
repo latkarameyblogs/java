@@ -27,9 +27,9 @@ public class SagaEventListener {
 
     private final SagaCommandProducer commandProducer;
 
-    public SagaEventListener(SagaRepository sagaRepository,SagaCommandProducer commandProducer, ProcessedEventRepository processedEventRepository) {
+    public SagaEventListener(SagaRepository sagaRepository, SagaCommandProducer commandProducer, ProcessedEventRepository processedEventRepository) {
         this.sagaRepository = sagaRepository;
-        this.commandProducer  = commandProducer;
+        this.commandProducer = commandProducer;
         this.processedEventRepository = processedEventRepository;
     }
 
@@ -53,10 +53,8 @@ public class SagaEventListener {
         }
 
 
-
-       Optional<SagaInstance> optionalSaga =
-               sagaRepository.findById(UUID.fromString(event.getSagaId()));
-
+        Optional<SagaInstance> optionalSaga =
+                sagaRepository.findById(UUID.fromString(event.getSagaId()));
 
 
         if (optionalSaga.isEmpty()) {
@@ -87,10 +85,6 @@ public class SagaEventListener {
                         + event.getPolicyId()
         );
     }
-
-
-
-
 
 
     @KafkaListener(

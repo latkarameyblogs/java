@@ -16,9 +16,10 @@ public class PaymentCompletedEvent {
         this.eventId = eventId;
     }
 
-    public PaymentCompletedEvent() {}
+    public PaymentCompletedEvent() {
+    }
 
-    public PaymentCompletedEvent(String sagaID,Long policyId, boolean success) {
+    public PaymentCompletedEvent(String sagaID, Long policyId, boolean success) {
         this.policyId = policyId;
         this.success = success;
     }

@@ -2,7 +2,8 @@
 
 ## Overview
 
-This repository demonstrates a **microservices-based insurance platform** implementing a **choreography-based SAGA** using **Kafka** for asynchronous event-driven communication.  
+This repository demonstrates a **microservices-based insurance platform** implementing a **choreography-based SAGA**
+using **Kafka** for asynchronous event-driven communication.
 
 We migrated from a traditional REST orchestration SAGA to a fully decoupled, event-driven architecture.
 
@@ -17,6 +18,7 @@ Key features:
 ---
 
 ## Architecture
+
 User
 ↓
 PolicyService
@@ -31,24 +33,25 @@ UnderwritingService
 PolicyService
 → consumes RiskEvaluatedEvent
 → updates status:
+
 - APPROVED → PAYMENT_PENDING
 - REJECTED → REJECTED
-↓
-PaymentService (next)
-→ consumes RiskEvaluatedEvent
-→ processes payment
-→ publishes PaymentCompletedEvent → Kafka (payment-completed)
-↓
-PolicyService
-→ consumes PaymentCompletedEvent
-→ updates status → ACTIVE
-
+  ↓
+  PaymentService (next)
+  → consumes RiskEvaluatedEvent
+  → processes payment
+  → publishes PaymentCompletedEvent → Kafka (payment-completed)
+  ↓
+  PolicyService
+  → consumes PaymentCompletedEvent
+  → updates status → ACTIVE
 
 ---
 
 ## Services
 
 ### 1. Policy Service
+
 - Manages policies and lifecycle status
 - Publishes `PolicyCreatedEvent`
 - Listens for `RiskEvaluatedEvent` and `PaymentCompletedEvent`
@@ -56,8 +59,8 @@ PolicyService
 
 UNDER_REVIEW → PAYMENT_PENDING → ACTIVE / REJECTED
 
-
 ### 2. Underwriting Service
+
 - Listens to `PolicyCreatedEvent`
 - Evaluates risk based on business rules
 - Publishes `RiskEvaluatedEvent`
@@ -66,6 +69,7 @@ UNDER_REVIEW → PAYMENT_PENDING → ACTIVE / REJECTED
 - Premium ≤ 100,000 → APPROVED
 
 ### 3. Payment Service (to be implemented)
+
 - Listens to `RiskEvaluatedEvent` for approved policies
 - Processes payment
 - Publishes `PaymentCompletedEvent`
@@ -75,10 +79,10 @@ UNDER_REVIEW → PAYMENT_PENDING → ACTIVE / REJECTED
 
 ## Kafka Topics
 
-| Topic | Description |
-|-------|-------------|
-| `policy-created` | PolicyService publishes new policies |
-| `risk-evaluated` | Underwriting publishes risk evaluation results |
+| Topic               | Description                                          |
+|---------------------|------------------------------------------------------|
+| `policy-created`    | PolicyService publishes new policies                 |
+| `risk-evaluated`    | Underwriting publishes risk evaluation results       |
 | `payment-completed` | Payment service publishes payment completion results |
 
 ---
@@ -97,9 +101,9 @@ UNDER_REVIEW → PAYMENT_PENDING → ACTIVE / REJECTED
 
 ## Branching Strategy
 
-| Branch | Purpose |
-|--------|---------|
-| `orchestrator-saga` | Original REST orchestration SAGA (kept for reference) |
+| Branch              | Purpose                                                 |
+|---------------------|---------------------------------------------------------|
+| `orchestrator-saga` | Original REST orchestration SAGA (kept for reference)   |
 | `choreography-saga` | Event-driven choreography SAGA (current default branch) |
 
 ---
@@ -107,6 +111,7 @@ UNDER_REVIEW → PAYMENT_PENDING → ACTIVE / REJECTED
 ## Setup & Run Locally
 
 1. **Clone repository**
+
  ```bash
  git clone <your-repo-url>
  cd insurance-platform

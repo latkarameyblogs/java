@@ -10,9 +10,10 @@ public class CreatePolicyCommand {
     private BigDecimal premiumAmount;
     private String sagaId;
 
-    public CreatePolicyCommand() {}
+    public CreatePolicyCommand() {
+    }
 
-    public CreatePolicyCommand(String sagaId,Long customerId, String policyType, BigDecimal premiumAmount) {
+    public CreatePolicyCommand(String sagaId, Long customerId, String policyType, BigDecimal premiumAmount) {
         this.sagaId = sagaId;
         this.customerId = customerId;
         this.policyType = policyType;
@@ -22,7 +23,6 @@ public class CreatePolicyCommand {
     public Long getCustomerId() {
         return customerId;
     }
-
 
 
     public String getPolicyType() {

@@ -1,26 +1,20 @@
-package com.insurance.platform.saga.messaging.command;
+package com.insurance.platform.policyquery.entity;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
-public class ProcessPaymentCommand {
+@Entity
+public class PolicyView {
 
-
+    @Id
     private Long policyId;
 
+    private Long customerId;
     private String policyType;
-
     private BigDecimal premiumAmount;
+    private String status;
 
-    private String sagaId;
-
-    public ProcessPaymentCommand() {
-    }
-
-    public ProcessPaymentCommand(String sagaId, Long policyId, String policyType, BigDecimal premiumAmount) {
-        this.sagaId = sagaId;
-        this.policyId = policyId;
-        this.policyType = policyType;
-        this.premiumAmount = premiumAmount;
+    public PolicyView() {
     }
 
     public Long getPolicyId() {
@@ -29,6 +23,14 @@ public class ProcessPaymentCommand {
 
     public void setPolicyId(Long policyId) {
         this.policyId = policyId;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
     public String getPolicyType() {
@@ -47,14 +49,11 @@ public class ProcessPaymentCommand {
         this.premiumAmount = premiumAmount;
     }
 
-    public String getSagaId() {
-        return sagaId;
+    public String getStatus() {
+        return status;
     }
 
-
-    public void setSagaId(String sagaId) {
-        this.sagaId = sagaId;
+    public void setStatus(String status) {
+        this.status = status;
     }
-
-
 }

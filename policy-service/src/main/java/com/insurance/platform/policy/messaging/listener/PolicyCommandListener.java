@@ -17,7 +17,7 @@ public class PolicyCommandListener {
     private final PolicyService policyService;
 
 
-    @KafkaListener(topics = "create-policy-command", groupId = "policy-service",  properties = {
+    @KafkaListener(topics = "create-policy-command", groupId = "policy-service", properties = {
             "spring.json.value.default.type=com.insurance.platform.policy.messaging.command.CreatePolicyCommand"
     })
     public void handleCreatePolicy(CreatePolicyCommand command) {
@@ -28,9 +28,8 @@ public class PolicyCommandListener {
         policy.setPolicyType(command.getPolicyType());
         policy.setPremiumAmount(command.getPremiumAmount());
 
-        policyService.createPolicy(policy,command.getSagaId());
+        policyService.createPolicy(policy, command.getSagaId());
     }
-
 
 
     @KafkaListener(

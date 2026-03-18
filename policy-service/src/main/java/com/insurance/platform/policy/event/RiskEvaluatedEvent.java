@@ -6,7 +6,8 @@ public class RiskEvaluatedEvent {
     private boolean approved;
     private String reason;
 
-    public RiskEvaluatedEvent() {}
+    public RiskEvaluatedEvent() {
+    }
 
     public RiskEvaluatedEvent(Long policyId, boolean approved, String reason) {
         this.policyId = policyId;

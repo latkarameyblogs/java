@@ -22,7 +22,7 @@ public class PaymentService {
     }
 
     @Transactional
-    public Boolean  processPayment(Long policyId, String sagaId) {
+    public Boolean processPayment(Long policyId, String sagaId) {
 
         System.out.println(
                 "Processing payment for policyId: " + policyId

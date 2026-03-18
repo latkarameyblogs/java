@@ -20,7 +20,7 @@ public class PolicyService {
 
     private final PolicyRepository repository;
     private final CustomerClient customerClient;
-//    private final UnderwritingClient underwritingClient;
+    //    private final UnderwritingClient underwritingClient;
 //    private final PaymentClient paymentClient;
     private final PolicyEventProducer eventProducer;
 
@@ -97,10 +97,8 @@ public class PolicyService {
 //    }
 
     //Choreography SAGA
-
-
     @Transactional
-    public Policy createPolicy (Policy policy,String sagaId) {
+    public Policy createPolicy(Policy policy, String sagaId) {
 
         if (!customerClient.customerExists(policy.getCustomerId())) {
             throw new RuntimeException("Customer does not exist");
@@ -138,7 +136,6 @@ public class PolicyService {
         );
 
         outboxRepository.save(outboxEvent);
-
 
 
         return savedPolicy;

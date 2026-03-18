@@ -1,6 +1,7 @@
 package com.insurance.platform.customer.domain;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,23 +30,43 @@ public class Customer {
 
     // Getters and Setters
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getFullName() { return fullName; }
+    public String getFullName() {
+        return fullName;
+    }
 
-    public void setFullName(String fullName) { this.fullName = fullName; }
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
-    public String getEmail() { return email; }
+    public String getEmail() {
+        return email;
+    }
 
-    public void setEmail(String email) { this.email = email; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public String getMobileNumber() { return mobileNumber; }
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
 
-    public void setMobileNumber(String mobileNumber) { this.mobileNumber = mobileNumber; }
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
 
-    public String getKycStatus() { return kycStatus; }
+    public String getKycStatus() {
+        return kycStatus;
+    }
 
-    public void setKycStatus(String kycStatus) { this.kycStatus = kycStatus; }
+    public void setKycStatus(String kycStatus) {
+        this.kycStatus = kycStatus;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 }

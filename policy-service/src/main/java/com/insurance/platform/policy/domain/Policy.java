@@ -1,6 +1,7 @@
 package com.insurance.platform.policy.domain;
 
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -33,22 +34,51 @@ public class Policy {
     }
 
     // Getters and Setters
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getPolicyNumber() { return policyNumber; }
-    public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+    public String getPolicyNumber() {
+        return policyNumber;
+    }
 
-    public Long getCustomerId() { return customerId; }
-    public void setCustomerId(Long customerId) { this.customerId = customerId; }
+    public void setPolicyNumber(String policyNumber) {
+        this.policyNumber = policyNumber;
+    }
 
-    public String getPolicyType() { return policyType; }
-    public void setPolicyType(String policyType) { this.policyType = policyType; }
+    public Long getCustomerId() {
+        return customerId;
+    }
 
-    public BigDecimal getPremiumAmount() { return premiumAmount; }
-    public void setPremiumAmount(BigDecimal premiumAmount) { this.premiumAmount = premiumAmount; }
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
 
-    public PolicyStatus getStatus() { return status; }
-    public void setStatus(PolicyStatus status) { this.status = status; }
+    public String getPolicyType() {
+        return policyType;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setPolicyType(String policyType) {
+        this.policyType = policyType;
+    }
+
+    public BigDecimal getPremiumAmount() {
+        return premiumAmount;
+    }
+
+    public void setPremiumAmount(BigDecimal premiumAmount) {
+        this.premiumAmount = premiumAmount;
+    }
+
+    public PolicyStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PolicyStatus status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 }

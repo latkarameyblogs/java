@@ -13,7 +13,8 @@ public class ProcessPaymentCommand {
 
     private String sagaId;
 
-    public ProcessPaymentCommand(){}
+    public ProcessPaymentCommand() {
+    }
 
     public ProcessPaymentCommand(String sagaId, Long policyId, String policyType, BigDecimal premiumAmount) {
         this.sagaId = sagaId;
@@ -54,7 +55,6 @@ public class ProcessPaymentCommand {
     public void setSagaId(String sagaId) {
         this.sagaId = sagaId;
     }
-
 
 
 }

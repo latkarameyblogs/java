@@ -5,7 +5,8 @@ public class PaymentCompletedEvent {
     private Long policyId;
     private boolean success;
 
-    public PaymentCompletedEvent() {}
+    public PaymentCompletedEvent() {
+    }
 
     public Long getPolicyId() {
         return policyId;

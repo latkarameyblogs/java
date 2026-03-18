@@ -1,6 +1,7 @@
 package com.insurance.platform.policy.outbox;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 

@@ -15,12 +15,27 @@ public class CreateCustomerRequest {
     @Pattern(regexp = "^[0-9]{10}$", message = "Mobile number must be 10 digits")
     private String mobileNumber;
 
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
+    public String getFullName() {
+        return fullName;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
-    public String getMobileNumber() { return mobileNumber; }
-    public void setMobileNumber(String mobileNumber) { this.mobileNumber = mobileNumber; }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
 }

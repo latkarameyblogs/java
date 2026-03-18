@@ -4,7 +4,8 @@ public class ActivatePolicyCommand {
 
     private Long policyId;
 
-    public ActivatePolicyCommand() {}
+    public ActivatePolicyCommand() {
+    }
 
     public Long getPolicyId() {
         return policyId;

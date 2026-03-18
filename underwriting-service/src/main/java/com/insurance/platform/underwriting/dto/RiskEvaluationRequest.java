@@ -1,6 +1,7 @@
 package com.insurance.platform.underwriting.dto;
 
 import jakarta.validation.constraints.NotNull;
+
 import java.math.BigDecimal;
 
 public class RiskEvaluationRequest {

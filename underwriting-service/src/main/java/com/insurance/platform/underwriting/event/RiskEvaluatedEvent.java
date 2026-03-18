@@ -10,7 +10,6 @@ public class RiskEvaluatedEvent {
     private String sagaID;
 
 
-
     private String policyType;
 
     private BigDecimal premiumAmount;
@@ -18,10 +17,10 @@ public class RiskEvaluatedEvent {
     private String eventId;
 
 
+    public RiskEvaluatedEvent() {
+    }
 
-    public RiskEvaluatedEvent() {}
-
-    public RiskEvaluatedEvent(String sagaID,Long policyId, boolean approved, String reason, String policyType, BigDecimal premiumAmount) {
+    public RiskEvaluatedEvent(String sagaID, Long policyId, boolean approved, String reason, String policyType, BigDecimal premiumAmount) {
         this.sagaID = sagaID;
         this.policyId = policyId;
         this.approved = approved;
