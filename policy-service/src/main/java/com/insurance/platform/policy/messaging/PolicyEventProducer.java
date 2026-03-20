@@ -1,6 +1,6 @@
 package com.insurance.platform.policy.messaging;
 
-import com.insurance.platform.policy.event.PolicyCreatedEvent;
+import com.insurance.platform.events.PolicyCreatedEvent;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 

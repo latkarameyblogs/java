@@ -1,7 +1,7 @@
 package com.insurance.platform.underwriting.outbox;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.insurance.platform.underwriting.event.RiskEvaluatedEvent;
+import com.insurance.platform.events.RiskEvaluatedEvent;
 import com.insurance.platform.underwriting.messaging.UnderwritingEventProducer;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

@@ -1,9 +1,9 @@
 package com.insurance.platform.policy.messaging;
 
+import com.insurance.platform.events.PaymentCompletedEvent;
+import com.insurance.platform.events.RiskEvaluatedEvent;
 import com.insurance.platform.policy.domain.Policy;
 import com.insurance.platform.policy.domain.PolicyStatus;
-import com.insurance.platform.policy.event.PaymentCompletedEvent;
-import com.insurance.platform.policy.event.RiskEvaluatedEvent;
 import com.insurance.platform.policy.repository.PolicyRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class PolicyEventListener {
     @KafkaListener(
             topics = "risk-evaluated",
             properties = {
-                    "spring.json.value.default.type=com.insurance.platform.policy.event.RiskEvaluatedEvent"
+                    "spring.json.value.default.type=com.insurance.platform.events.RiskEvaluatedEvent"
             }
     )
     public void handleRiskEvaluated(RiskEvaluatedEvent event) {
@@ -47,7 +47,7 @@ public class PolicyEventListener {
     @KafkaListener(
             topics = "payment-completed",
             properties = {
-                    "spring.json.value.default.type=com.insurance.platform.policy.event.PaymentCompletedEvent"
+                    "spring.json.value.default.type=com.insurance.platform.events.PaymentCompletedEvent"
             }
     )
     public void handlePaymentCompleted(PaymentCompletedEvent event) {

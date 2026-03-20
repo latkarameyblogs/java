@@ -1,9 +1,9 @@
 package com.insurance.platform.policyquery.listener;
 
+import com.insurance.platform.events.PaymentCompletedEvent;
+import com.insurance.platform.events.PolicyCreatedEvent;
 import com.insurance.platform.policyquery.entity.PolicyView;
 import com.insurance.platform.policyquery.entity.PolicyViewRepository;
-import com.insurance.platform.policyquery.event.PaymentCompletedEvent;
-import com.insurance.platform.policyquery.event.PolicyCreatedEvent;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ public class PolicyEventListener {
             topics = "policy-created",
             groupId = "policy-query-group",
             properties = {
-                    "spring.json.value.default.type=com.insurance.platform.policyquery.event.PolicyCreatedEvent"
+                    "spring.json.value.default.type=com.insurance.platform.events.PolicyCreatedEvent"
             }
     )
     public void handlePolicyCreated(PolicyCreatedEvent event) {
@@ -42,7 +42,7 @@ public class PolicyEventListener {
             topics = "payment-completed",
             groupId = "policy-query-group",
             properties = {
-                    "spring.json.value.default.type=com.insurance.platform.policyquery.event.PaymentCompletedEvent"
+                    "spring.json.value.default.type=com.insurance.platform.events.PaymentCompletedEvent"
             }
     )
     public void handlePaymentCompleted(PaymentCompletedEvent event) {

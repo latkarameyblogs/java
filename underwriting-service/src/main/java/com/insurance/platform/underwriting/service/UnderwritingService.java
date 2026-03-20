@@ -1,9 +1,9 @@
 package com.insurance.platform.underwriting.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.insurance.platform.events.RiskEvaluatedEvent;
 import com.insurance.platform.underwriting.dto.RiskEvaluationRequest;
 import com.insurance.platform.underwriting.dto.RiskEvaluationResponse;
-import com.insurance.platform.underwriting.event.RiskEvaluatedEvent;
 import com.insurance.platform.underwriting.outbox.OutboxEvent;
 import com.insurance.platform.underwriting.outbox.OutboxEventRepository;
 import org.springframework.stereotype.Service;

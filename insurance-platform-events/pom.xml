@@ -3,21 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.insurance.platform</groupId>
+        <artifactId>insurance-platform</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
-    <groupId>com.insurance.platform
-    </groupId>
-    <artifactId>insurance-platform</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <modules>
-        <module>customer-service</module>
-        <module>policy-service</module>
-        <module>underwriting-service</module>
-        <module>payment-service</module>
-        <module>saga-orchestrator-service</module>
-        <module>policy-query-service</module>
-        <module>insurance-platform-events</module>
-    </modules>
+    <artifactId>insurance-platform-events</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

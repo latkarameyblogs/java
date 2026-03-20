@@ -1,4 +1,4 @@
-package com.insurance.platform.saga.messaging.event;
+package com.insurance.platform.events;
 
 public class PaymentCompletedEvent {
 

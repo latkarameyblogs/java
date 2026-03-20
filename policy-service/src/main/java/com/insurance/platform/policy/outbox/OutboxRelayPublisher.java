@@ -1,9 +1,8 @@
 package com.insurance.platform.policy.outbox;
 
-import com.insurance.platform.policy.messaging.PolicyEventProducer;
-import com.insurance.platform.policy.event.PolicyCreatedEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.insurance.platform.events.PolicyCreatedEvent;
+import com.insurance.platform.policy.messaging.PolicyEventProducer;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,7 @@
 package com.insurance.platform.payment.outbox;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.insurance.platform.payment.event.PaymentCompletedEvent;
+import com.insurance.platform.events.PaymentCompletedEvent;
 import com.insurance.platform.payment.messaging.PaymentEventProducer;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,7 @@ public class OutboxRelayPublisher {
                 PaymentCompletedEvent paymentCompletedEvent =
                         objectMapper.readValue(
                                 event.getPayload(),
-                                PaymentCompletedEvent.class
+                               PaymentCompletedEvent.class
                         );
 
                 System.out.println(

@@ -1,11 +1,11 @@
 package com.insurance.platform.payment.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.insurance.platform.payment.event.PaymentCompletedEvent;
 import com.insurance.platform.payment.outbox.OutboxEvent;
 import com.insurance.platform.payment.outbox.OutboxEventRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.insurance.platform.events.PaymentCompletedEvent;
 
 import java.util.UUID;
 
@@ -31,12 +31,9 @@ public class PaymentService {
         // Simulated payment logic
         boolean success = true;
 
-        PaymentCompletedEvent event =
-                new PaymentCompletedEvent(
-                        sagaId,
-                        policyId,
-                        success
-                );
+        PaymentCompletedEvent event =new PaymentCompletedEvent( sagaId,
+                policyId,
+                success);
         event.setEventId(UUID.randomUUID().toString());
 
         try {

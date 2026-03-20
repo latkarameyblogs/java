@@ -1,4 +1,4 @@
-package com.insurance.platform.underwriting.event;
+package com.insurance.platform.events;
 
 import java.math.BigDecimal;
 
@@ -14,9 +14,6 @@ public class RiskEvaluatedEvent {
 
     private BigDecimal premiumAmount;
 
-    private String eventId;
-
-
     public RiskEvaluatedEvent() {
     }
 
@@ -28,6 +25,17 @@ public class RiskEvaluatedEvent {
         this.policyType = policyType;
         this.premiumAmount = premiumAmount;
     }
+
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
+    private String eventId;
 
     public Long getPolicyId() {
         return policyId;
@@ -51,13 +59,5 @@ public class RiskEvaluatedEvent {
 
     public BigDecimal getPremiumAmount() {
         return premiumAmount;
-    }
-
-    public String getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(String eventId) {
-        this.eventId = eventId;
     }
 }

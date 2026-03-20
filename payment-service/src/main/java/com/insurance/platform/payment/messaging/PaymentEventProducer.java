@@ -1,6 +1,6 @@
 package com.insurance.platform.payment.messaging;
 
-import com.insurance.platform.payment.event.PaymentCompletedEvent;
+import com.insurance.platform.events.PaymentCompletedEvent;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 

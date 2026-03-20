@@ -1,6 +1,6 @@
 package com.insurance.platform.underwriting.messaging;
 
-import com.insurance.platform.underwriting.event.RiskEvaluatedEvent;
+import com.insurance.platform.events.RiskEvaluatedEvent;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 

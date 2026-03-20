@@ -69,6 +69,13 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>com.insurance.platform</groupId>
+            <artifactId>insurance-platform-events</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

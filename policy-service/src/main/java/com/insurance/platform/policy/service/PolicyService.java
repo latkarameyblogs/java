@@ -2,10 +2,10 @@ package com.insurance.platform.policy.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.insurance.platform.events.PolicyCreatedEvent;
 import com.insurance.platform.policy.client.CustomerClient;
 import com.insurance.platform.policy.domain.Policy;
 import com.insurance.platform.policy.domain.PolicyStatus;
-import com.insurance.platform.policy.event.PolicyCreatedEvent;
 import com.insurance.platform.policy.messaging.PolicyEventProducer;
 import com.insurance.platform.policy.outbox.OutboxEvent;
 import com.insurance.platform.policy.outbox.OutboxEventRepository;

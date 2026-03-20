@@ -1,14 +1,14 @@
 package com.insurance.platform.saga.messaging.listener;
 
+import com.insurance.platform.events.PaymentCompletedEvent;
+import com.insurance.platform.events.PolicyCreatedEvent;
+import com.insurance.platform.events.RiskEvaluatedEvent;
 import com.insurance.platform.saga.domain.SagaInstance;
 import com.insurance.platform.saga.domain.SagaStep;
 import com.insurance.platform.saga.messaging.command.ActivatePolicyCommand;
 import com.insurance.platform.saga.messaging.command.EvaluateRiskCommand;
 import com.insurance.platform.saga.messaging.command.ProcessPaymentCommand;
-import com.insurance.platform.saga.messaging.event.PaymentCompletedEvent;
-import com.insurance.platform.saga.messaging.event.PolicyCreatedEvent;
 import com.insurance.platform.saga.messaging.event.ProcessedEvent;
-import com.insurance.platform.saga.messaging.event.RiskEvaluatedEvent;
 import com.insurance.platform.saga.messaging.producer.SagaCommandProducer;
 import com.insurance.platform.saga.repository.ProcessedEventRepository;
 import com.insurance.platform.saga.repository.SagaRepository;
@@ -37,7 +37,7 @@ public class SagaEventListener {
             topics = "policy-created",
             groupId = "saga-group",
             properties = {
-                    "spring.json.value.default.type=com.insurance.platform.saga.messaging.event.PolicyCreatedEvent"
+                    "spring.json.value.default.type=com.insurance.platform.events.PolicyCreatedEvent"
             }
     )
     public void handlePolicyCreated(PolicyCreatedEvent event) {
@@ -91,7 +91,7 @@ public class SagaEventListener {
             topics = "risk-evaluated",
             groupId = "saga-group",
             properties = {
-                    "spring.json.value.default.type=com.insurance.platform.saga.messaging.event.RiskEvaluatedEvent"
+                    "spring.json.value.default.type=com.insurance.platform.events.RiskEvaluatedEvent"
             }
     )
     public void handleRiskEvaluated(RiskEvaluatedEvent event) {
@@ -103,6 +103,8 @@ public class SagaEventListener {
             System.out.println("Duplicate RiskEvaluatedEvent ignored: " + event.getEventId());
             return;
         }
+
+        //For testing
 
 //        if (true) {
 //            throw new RuntimeException("Simulated failure for retry testing");
@@ -147,7 +149,7 @@ public class SagaEventListener {
             topics = "payment-completed",
             groupId = "saga-group",
             properties = {
-                    "spring.json.value.default.type=com.insurance.platform.saga.messaging.event.PaymentCompletedEvent"
+                    "spring.json.value.default.type=com.insurance.platform.events.PaymentCompletedEvent"
             }
     )
     public void handlePaymentCompleted(PaymentCompletedEvent event) {
