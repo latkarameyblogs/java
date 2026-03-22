@@ -10,6 +10,16 @@ public class CreatePolicyCommand {
     private BigDecimal premiumAmount;
     private String sagaId;
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    private String userId;
+
     public CreatePolicyCommand() {
     }
 

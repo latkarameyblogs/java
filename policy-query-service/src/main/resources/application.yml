@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: policy-query-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8087/realms/insurance-platform
 
   datasource:
     url: jdbc:h2:mem:querydb

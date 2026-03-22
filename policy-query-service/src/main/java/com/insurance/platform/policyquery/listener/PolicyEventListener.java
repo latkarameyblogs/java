@@ -33,6 +33,7 @@ public class PolicyEventListener {
         view.setPolicyType(event.getPolicyType());
         view.setPremiumAmount(event.getPremiumAmount());
         view.setStatus("UNDER_REVIEW");
+        view.setUserId(event.getUserId());
 
         repository.save(view);
     }

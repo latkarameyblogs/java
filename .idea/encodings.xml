@@ -3,6 +3,8 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/customer-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/customer-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insurance-platform-events/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insurance-platform-events/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/payment-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/payment-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/policy-query-service/src/main/java" charset="UTF-8" />

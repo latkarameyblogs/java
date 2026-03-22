@@ -28,7 +28,7 @@ public class PolicyCommandListener {
         policy.setPolicyType(command.getPolicyType());
         policy.setPremiumAmount(command.getPremiumAmount());
 
-        policyService.createPolicy(policy, command.getSagaId());
+        policyService.createPolicy(policy, command.getSagaId(),command.getUserId());
     }
 
 

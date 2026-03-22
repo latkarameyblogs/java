@@ -12,6 +12,8 @@ import com.insurance.platform.policy.outbox.OutboxEventRepository;
 import com.insurance.platform.policy.repository.PolicyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
@@ -25,6 +27,9 @@ public class PolicyService {
     private final PolicyEventProducer eventProducer;
 
     private final OutboxEventRepository outboxRepository;
+
+
+    private static final Logger log = LoggerFactory.getLogger(PolicyService.class);
 
     public PolicyService(
             PolicyRepository repository,
@@ -98,7 +103,7 @@ public class PolicyService {
 
     //Choreography SAGA
     @Transactional
-    public Policy createPolicy(Policy policy, String sagaId) {
+    public Policy createPolicy(Policy policy, String sagaId,String userId) {
 
         if (!customerClient.customerExists(policy.getCustomerId())) {
             throw new RuntimeException("Customer does not exist");
@@ -117,6 +122,8 @@ public class PolicyService {
                 savedPolicy.getPremiumAmount()
         );
         event.setEventId(UUID.randomUUID().toString());
+        event.setUserId(userId);
+        log.info("UserId in event: {}", event.getUserId());
 
         ObjectMapper mapper = new ObjectMapper();
         String payload;

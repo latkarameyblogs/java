@@ -13,6 +13,7 @@ public class PolicyView {
     private String policyType;
     private BigDecimal premiumAmount;
     private String status;
+    private String userId;
 
     public PolicyView() {
     }
@@ -55,5 +56,13 @@ public class PolicyView {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

@@ -10,6 +10,13 @@ public class CreatePolicyCommand {
     private BigDecimal premiumAmount;
     private String sagaId;
 
+    public String getUserId() {
+        return userId;
+    }
+
+
+    private String userId;
+
     public CreatePolicyCommand() {
     }
 
