@@ -3,9 +3,11 @@ package com.insurance.platform.saga.controller;
 import com.insurance.platform.saga.domain.SagaInstance;
 import com.insurance.platform.saga.messaging.command.CreatePolicyCommand;
 import com.insurance.platform.saga.service.SagaService;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/saga")
@@ -25,8 +27,8 @@ public class SagaController {
 
 
     @GetMapping("/test")
-    public String test(@AuthenticationPrincipal Jwt jwt) {
-        return jwt.getSubject();
+    public Map<String,Object> test(@AuthenticationPrincipal Jwt jwt) {
+        return jwt.getClaims();
     }
 
     @PostMapping("/start-policy")

@@ -1,177 +1,298 @@
-# Insurance Platform – Event-Driven Choreography SAGA
+# 🏦 Insurance Platform – Microservices Architecture
 
-## Overview
+## 📌 Overview
 
-This repository demonstrates a **microservices-based insurance platform** implementing a **choreography-based SAGA**
-using **Kafka** for asynchronous event-driven communication.
+This project is a **distributed microservices-based insurance platform** implementing modern architectural patterns:
 
-We migrated from a traditional REST orchestration SAGA to a fully decoupled, event-driven architecture.
-
-Key features:
-
-- Policy Service, Underwriting Service, Payment Service (to be completed)
-- Event-driven SAGA using Kafka topics
-- Asynchronous, loosely-coupled service communication
-- Safe, decoupled lifecycle of policies
-- Modular branch structure to preserve orchestration SAGA (`orchestrator-saga`) for reference
+* Saga Orchestration
+* Event-driven communication using Kafka
+* Transactional Outbox Pattern
+* CQRS (Command Query Responsibility Segregation)
+* Retry & Dead Letter Queue (DLQ)
+* OAuth2/JWT-based security using Keycloak
+* Role-Based Access Control (RBAC)
 
 ---
 
-## Architecture
+## 🧱 Architecture Summary
 
-User
-↓
-PolicyService
-→ saves policy (UNDER_REVIEW)
-→ publishes PolicyCreatedEvent → Kafka (policy-created)
-↓
-UnderwritingService
-→ consumes PolicyCreatedEvent
-→ applies business rules
-→ publishes RiskEvaluatedEvent → Kafka (risk-evaluated)
-↓
-PolicyService
-→ consumes RiskEvaluatedEvent
-→ updates status:
-
-- APPROVED → PAYMENT_PENDING
-- REJECTED → REJECTED
-  ↓
-  PaymentService (next)
-  → consumes RiskEvaluatedEvent
-  → processes payment
-  → publishes PaymentCompletedEvent → Kafka (payment-completed)
-  ↓
-  PolicyService
-  → consumes PaymentCompletedEvent
-  → updates status → ACTIVE
+```
+Client → API (Orchestrator) → Saga → Microservices → Kafka → CQRS → Query Service
+                                 ↓
+                              Keycloak (Auth)
+```
 
 ---
 
-## Services
+## ⚙️ Tech Stack
 
-### 1. Policy Service
-
-- Manages policies and lifecycle status
-- Publishes `PolicyCreatedEvent`
-- Listens for `RiskEvaluatedEvent` and `PaymentCompletedEvent`
-- Status flow:
-
-UNDER_REVIEW → PAYMENT_PENDING → ACTIVE / REJECTED
-
-### 2. Underwriting Service
-
-- Listens to `PolicyCreatedEvent`
-- Evaluates risk based on business rules
-- Publishes `RiskEvaluatedEvent`
-- Example rule:
-- Premium > 100,000 → REJECTED
-- Premium ≤ 100,000 → APPROVED
-
-### 3. Payment Service (to be implemented)
-
-- Listens to `RiskEvaluatedEvent` for approved policies
-- Processes payment
-- Publishes `PaymentCompletedEvent`
-- Updates PolicyService to ACTIVE status
+* Java 17
+* Spring Boot 3.x
+* Spring Kafka
+* Docker (Kafka + Keycloak)
+* H2 (Dev DB)
+* Keycloak 22.0.5 (Identity & Access Management)
 
 ---
 
-## Kafka Topics
+## 🧩 Microservices
 
-| Topic               | Description                                          |
-|---------------------|------------------------------------------------------|
-| `policy-created`    | PolicyService publishes new policies                 |
-| `risk-evaluated`    | Underwriting publishes risk evaluation results       |
-| `payment-completed` | Payment service publishes payment completion results |
-
----
-
-## Technology Stack
-
-- Java 17
-- Spring Boot 3
-- Spring Kafka
-- H2 Database (for local development)
-- Docker & Docker Compose (Kafka & Zookeeper)
-- IntelliJ IDEA Community Edition
-- GitHub for version control
+| Service                   | Responsibility               |
+| ------------------------- | ---------------------------- |
+| customer-service          | Manages customer data        |
+| policy-service            | Creates and manages policies |
+| underwriting-service      | Risk evaluation              |
+| payment-service           | Payment processing           |
+| orchestrator-service      | Saga orchestration           |
+| policy-query-service      | CQRS read model              |
+| insurance-platform-events | Shared event contracts       |
 
 ---
 
-## Branching Strategy
+## 🔄 Saga Orchestration Flow
 
-| Branch              | Purpose                                                 |
-|---------------------|---------------------------------------------------------|
-| `orchestrator-saga` | Original REST orchestration SAGA (kept for reference)   |
-| `choreography-saga` | Event-driven choreography SAGA (current default branch) |
+The system uses a **centralized Saga orchestrator**:
+
+```
+PolicyCreated → RiskEvaluated → PaymentCompleted → PolicyActivated
+```
+
+* Orchestrator triggers commands
+* Services emit events
+* Saga progresses based on events
 
 ---
 
-## Setup & Run Locally
+## 📬 Event-Driven Architecture
 
-1. **Clone repository**
+* Apache Kafka used for async communication
+* Topics:
 
- ```bash
- git clone <your-repo-url>
- cd insurance-platform
+  * policy-created
+  * risk-evaluated
+  * payment-completed
+  * *-dlq (Dead Letter Queues)
 
-Start Kafka & Zookeeper
+---
 
-docker compose up -d
+## 🧾 Transactional Outbox Pattern
 
-Start Services
+To ensure reliability:
 
-Policy Service:
+* Events are stored in `outbox_event` table
+* Background relay publishes to Kafka
+* Guarantees **no message loss**
 
-mvn spring-boot:run -f policy-service
+---
 
-Underwriting Service:
+## ♻️ Idempotent Consumers
 
-mvn spring-boot:run -f underwriting-service
+Each service maintains:
 
-Test Flow
+```
+processed_events
+```
 
-Create policy using Postman:
+* Prevents duplicate processing
+* Ensures **exactly-once behavior (logical)**
 
-POST http://localhost:8082/policies
-{
-  "customerId": 1,
-  "policyType": "HEALTH",
-  "premiumAmount": 5000
-}
+---
 
-Observe status changes asynchronously via Kafka events.
+## 🔁 Retry & DLQ
 
-Stop Kafka elegantly
+* Configured using Spring Kafka `DefaultErrorHandler`
+* Retry: 3 attempts with backoff
+* Failed messages → `<topic>-dlq`
 
-docker compose down
-Lessons Learned
+---
 
-Event-driven SAGA decouples services for scalability and resilience.
+## 📊 CQRS (Command Query Responsibility Segregation)
 
-JSON serialization/deserialization must be carefully configured for cross-service communication.
+### Write Side
 
-Hybrid flows (REST + events) during migration can cause conflicts; remove REST orchestration fully.
+* policy-service
+* payment-service
 
-Kafka topics serve as the backbone for chaining events across services.
+### Read Side
 
-Branching allows safe preservation of old orchestration flow while developing event-driven SAGA.
+* policy-query-service
 
-Next Steps
+### Flow
 
-Convert Payment Service to fully event-driven
+```
+PolicyCreatedEvent → PolicyView (UNDER_REVIEW)
+PaymentCompletedEvent → PolicyView (ACTIVE / CANCELLED)
+```
 
-Implement PaymentCompletedEvent handling
+---
 
-Add retries, dead-letter topics, and idempotency
+## 🔐 Security Architecture (Keycloak)
 
-Optional: Introduce shared event-contract module for enterprise-grade versioning
+### Identity Provider
 
-Authors
+* Keycloak (OAuth2 + OpenID Connect)
 
-Amey Latkar – Software Architect – latkaramey@gmail.com
+### Authentication Flow
 
-License
+```
+Client → Keycloak → JWT → API
+```
 
-This project is for educational and architectural demonstration purposes.
+### JWT Usage
+
+* `sub` → userId (Keycloak user ID)
+* Used across services for identity propagation
+
+---
+
+## 👤 Identity Propagation
+
+```
+JWT → Orchestrator → Command → Service → Event → Query Model
+```
+
+* `userId` (JWT subject) is propagated
+* Enables:
+
+  * auditability
+  * traceability
+  * user-specific queries
+
+---
+
+## 🛡️ Role-Based Access Control (RBAC)
+
+### Roles
+
+* `CUSTOMER` → can view own policies
+* `ADMIN` → can view all policies
+
+### Enforcement Example
+
+```
+CUSTOMER → /policies → own data
+ADMIN → /policies → all data
+```
+
+---
+
+## 🔑 Keycloak Setup
+
+### Realm
+
+```
+insurance-platform
+```
+
+### Client
+
+```
+insurance-client (Public)
+```
+
+### Grant Type
+
+```
+password (for development)
+```
+
+### Users
+
+| Username  | Role     |
+| --------- | -------- |
+| customer1 | CUSTOMER |
+| admin1    | ADMIN    |
+
+---
+
+## 🔗 Domain & Identity Mapping
+
+```
+Keycloak User (sub) ↔ Customer (domain)
+```
+
+* `sub` is stored/used as `userId`
+* Future enhancement: map to Customer entity
+
+---
+
+## 🌐 API Security
+
+* All APIs secured using JWT
+* Spring Security Resource Server used
+* Unauthorized requests → 401
+
+---
+
+## 🧪 Sample API
+
+### Get Policies (Role-aware)
+
+```
+GET /policies/policy
+Authorization: Bearer <token>
+```
+
+Behavior:
+
+* CUSTOMER → own policies
+* ADMIN → all policies
+
+---
+
+## 📦 Deployment
+
+### Docker Compose Services
+
+* Zookeeper
+* Kafka
+* Keycloak (with realm import)
+
+---
+
+## 🔄 Keycloak Backup & Restore
+
+* Exported realm JSON
+* Auto-import on startup using:
+
+```
+start-dev --import-realm
+```
+
+---
+
+## 🚀 Current Status
+
+✅ Saga orchestration
+✅ Event-driven architecture
+✅ Outbox pattern
+✅ Idempotent consumers
+✅ Retry + DLQ
+✅ CQRS read model
+✅ JWT authentication
+✅ Role-based access control
+
+---
+
+## 🔜 Future Enhancements
+
+* Replace password grant with Authorization Code + PKCE
+* Service-to-service authentication
+* Centralized logging & tracing
+* WebSocket for real-time saga updates
+* Admin APIs for system monitoring
+* Customer onboarding via Keycloak Admin API
+
+---
+
+## 🧠 Key Architectural Decisions
+
+* Separation of Identity (Keycloak) and Domain (Customer Service)
+* Event-driven communication for scalability
+* CQRS for optimized reads
+* Saga for distributed transactions
+* JWT-based stateless security
+
+---
+
+

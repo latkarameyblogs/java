@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/policies")
@@ -34,7 +35,18 @@ public class PolicyQueryController {
 
     @GetMapping("/policy")
     public List<PolicyView> getPolicies(@AuthenticationPrincipal Jwt jwt) {
+
+        Map<String, Object> realmAccess = jwt.getClaim("realm_access");
+        List<String> roles = realmAccess != null
+                ? (List<String>) realmAccess.get("roles")
+                : List.of();
+
+        if (roles.contains("ADMIN")) {
+            return repository.findAll();
+        }
+
         return repository.findByUserId(jwt.getSubject());
     }
 
 }
+
