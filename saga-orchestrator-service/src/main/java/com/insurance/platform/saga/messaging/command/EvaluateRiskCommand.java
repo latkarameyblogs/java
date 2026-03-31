@@ -12,14 +12,17 @@ public class EvaluateRiskCommand {
 
     private String sagaId;
 
+    private String userId;
+
     public EvaluateRiskCommand() {
     }
 
-    public EvaluateRiskCommand(String sagaId, Long policyId, String policyType, BigDecimal premiumAmount) {
+    public EvaluateRiskCommand(String sagaId, Long policyId, String policyType, BigDecimal premiumAmount,String userId) {
         this.sagaId = sagaId;
         this.policyId = policyId;
         this.policyType = policyType;
         this.premiumAmount = premiumAmount;
+        this.userId = userId;
     }
 
     public Long getPolicyId() {
@@ -52,5 +55,13 @@ public class EvaluateRiskCommand {
 
     public void setSagaId(String sagaId) {
         this.sagaId = sagaId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

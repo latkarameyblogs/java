@@ -22,7 +22,7 @@ public class PaymentService {
     }
 
     @Transactional
-    public Boolean processPayment(Long policyId, String sagaId) {
+    public Boolean processPayment(Long policyId, String sagaId,String userId) {
 
         System.out.println(
                 "Processing payment for policyId: " + policyId
@@ -33,7 +33,7 @@ public class PaymentService {
 
         PaymentCompletedEvent event =new PaymentCompletedEvent( sagaId,
                 policyId,
-                success);
+                success,userId);
         event.setEventId(UUID.randomUUID().toString());
 
         try {

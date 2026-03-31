@@ -13,14 +13,28 @@ public class ProcessPaymentCommand {
 
     private String sagaId;
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    private String userId;
+
+
     public ProcessPaymentCommand() {
     }
 
-    public ProcessPaymentCommand(String sagaId, Long policyId, String policyType, BigDecimal premiumAmount) {
+
+
+    public ProcessPaymentCommand(String sagaId, Long policyId, String policyType, BigDecimal premiumAmount,String userId) {
         this.sagaId = sagaId;
         this.policyId = policyId;
         this.policyType = policyType;
         this.premiumAmount = premiumAmount;
+        this.userId = userId;
     }
 
     public Long getPolicyId() {

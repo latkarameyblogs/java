@@ -2,12 +2,12 @@ package com.insurance.platform.events;
 
 import java.math.BigDecimal;
 
-public class RiskEvaluatedEvent {
+public class RiskEvaluatedEvent implements SagaEvent {
 
     private Long policyId;
     private boolean approved;
     private String reason;
-    private String sagaID;
+    private String sagaId;
 
 
     private String policyType;
@@ -17,18 +17,24 @@ public class RiskEvaluatedEvent {
     public RiskEvaluatedEvent() {
     }
 
-    public RiskEvaluatedEvent(String sagaID, Long policyId, boolean approved, String reason, String policyType, BigDecimal premiumAmount) {
-        this.sagaID = sagaID;
+    public RiskEvaluatedEvent(String sagaId, Long policyId, boolean approved, String reason, String policyType, BigDecimal premiumAmount,String userId){
+        this.sagaId = sagaId;
         this.policyId = policyId;
         this.approved = approved;
         this.reason = reason;
         this.policyType = policyType;
         this.premiumAmount = premiumAmount;
+        this.userId =userId;
     }
+
 
 
     public String getEventId() {
         return eventId;
+    }
+
+    public String getSagaId() {
+        return sagaId;
     }
 
     public void setEventId(String eventId) {
@@ -49,9 +55,6 @@ public class RiskEvaluatedEvent {
         return reason;
     }
 
-    public String getSagaID() {
-        return sagaID;
-    }
 
     public String getPolicyType() {
         return policyType;
@@ -60,4 +63,14 @@ public class RiskEvaluatedEvent {
     public BigDecimal getPremiumAmount() {
         return premiumAmount;
     }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    private String userId;
 }

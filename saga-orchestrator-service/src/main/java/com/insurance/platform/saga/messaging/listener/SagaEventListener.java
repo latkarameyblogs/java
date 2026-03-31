@@ -10,6 +10,7 @@ import com.insurance.platform.saga.messaging.command.EvaluateRiskCommand;
 import com.insurance.platform.saga.messaging.command.ProcessPaymentCommand;
 import com.insurance.platform.saga.messaging.event.ProcessedEvent;
 import com.insurance.platform.saga.messaging.producer.SagaCommandProducer;
+import com.insurance.platform.saga.messaging.websocket.SagaNotificationService;
 import com.insurance.platform.saga.repository.ProcessedEventRepository;
 import com.insurance.platform.saga.repository.SagaRepository;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -27,10 +28,16 @@ public class SagaEventListener {
 
     private final SagaCommandProducer commandProducer;
 
-    public SagaEventListener(SagaRepository sagaRepository, SagaCommandProducer commandProducer, ProcessedEventRepository processedEventRepository) {
+
+    private final SagaNotificationService notificationService;
+
+
+
+    public SagaEventListener(SagaRepository sagaRepository, SagaCommandProducer commandProducer, ProcessedEventRepository processedEventRepository,SagaNotificationService notificationService) {
         this.sagaRepository = sagaRepository;
         this.commandProducer = commandProducer;
         this.processedEventRepository = processedEventRepository;
+        this.notificationService =notificationService;
     }
 
     @KafkaListener(
@@ -73,7 +80,7 @@ public class SagaEventListener {
         saga.setCurrentStep(SagaStep.WAITING_FOR_RISK);
 
         EvaluateRiskCommand command =
-                new EvaluateRiskCommand(event.getSagaId(), event.getPolicyId(), event.getPolicyType(), event.getPremiumAmount());
+                new EvaluateRiskCommand(event.getSagaId(), event.getPolicyId(), event.getPolicyType(), event.getPremiumAmount(),event.getUserId());
 
         commandProducer.sendEvaluateRiskCommand(command);
 
@@ -84,7 +91,12 @@ public class SagaEventListener {
                 "Saga progressed to risk evaluation for policyId: "
                         + event.getPolicyId()
         );
+        notificationService.notifyUser(event, saga);
+        System.out.println(
+                "notifyUser called with userId = " + event.getUserId()
+        );
     }
+
 
 
     @KafkaListener(
@@ -128,7 +140,7 @@ public class SagaEventListener {
             saga.setCurrentStep(SagaStep.WAITING_FOR_PAYMENT);
 
             ProcessPaymentCommand command =
-                    new ProcessPaymentCommand(event.getSagaID(), event.getPolicyId(), event.getPolicyType(), event.getPremiumAmount());
+                    new ProcessPaymentCommand(event.getSagaId(), event.getPolicyId(), event.getPolicyType(), event.getPremiumAmount(),event.getUserId());
 
             commandProducer.sendProcessPaymentCommand(command);
 
@@ -143,6 +155,7 @@ public class SagaEventListener {
 
         System.out.println("Saga updated for policyId: "
                 + event.getPolicyId());
+        notificationService.notifyUser(event, saga);
     }
 
     @KafkaListener(
@@ -187,7 +200,7 @@ public class SagaEventListener {
             saga.setCurrentStep(SagaStep.COMPLETED_SUCCESS);
 
             ActivatePolicyCommand command =
-                    new ActivatePolicyCommand(event.getPolicyId());
+                    new ActivatePolicyCommand(event.getPolicyId(),event.getUserId());
 
             commandProducer.sendActivatePolicyCommand(command);
 
@@ -204,5 +217,6 @@ public class SagaEventListener {
                         + event.getPolicyId()
         );
         processedEventRepository.save(new ProcessedEvent(event.getEventId()));
+        notificationService.notifyUser(event, saga);
     }
 }

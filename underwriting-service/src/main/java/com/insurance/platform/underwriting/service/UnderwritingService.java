@@ -53,7 +53,8 @@ public class UnderwritingService {
     public void evaluateRiskForPolicy(Long policyId,
                                       String policyType,
                                       BigDecimal premiumAmount,
-                                      String sagaId) {
+                                      String sagaId,
+                                      String userId) {
 
         RiskEvaluationRequest request =
                 new RiskEvaluationRequest(policyType, premiumAmount);
@@ -68,7 +69,8 @@ public class UnderwritingService {
                         response.isApproved(),
                         response.getRiskCategory(),
                         policyType,
-                        premiumAmount
+                        premiumAmount,
+                        userId
                 );
         event.setEventId(UUID.randomUUID().toString());
         try {

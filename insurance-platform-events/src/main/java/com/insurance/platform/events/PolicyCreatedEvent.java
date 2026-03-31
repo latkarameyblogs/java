@@ -2,7 +2,7 @@ package com.insurance.platform.events;
 
 import java.math.BigDecimal;
 
-public class PolicyCreatedEvent {
+public class PolicyCreatedEvent implements SagaEvent{
 
     private Long policyId;
     private Long customerId;

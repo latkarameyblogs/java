@@ -30,7 +30,8 @@ public class PaymentCommandListener {
 
         paymentService.processPayment(
                 command.getPolicyId(),
-                command.getSagaId()
+                command.getSagaId(),
+                command.getUserId()
         );
     }
 }

@@ -32,7 +32,8 @@ public class EvaluateRiskCommandListener {
                 command.getPolicyId(),
                 command.getPolicyType(),
                 command.getPremiumAmount(),
-                command.getSagaId()
+                command.getSagaId(),
+                command.getUserId()
         );
 
         System.out.println(
